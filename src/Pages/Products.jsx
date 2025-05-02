@@ -1,25 +1,35 @@
 import { useState, useEffect } from 'react';
   import { useCart } from '../Context/CartContext';
-  import { images } from '../assets/ImageReferences';
 
   function Products() {
     const { addToCart } = useCart();
     const [products, setProducts] = useState([]);
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('');
+    const [error, setError] = useState(null);
 
     useEffect(() => {
       fetch('/data/products.json')
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+          }
+          return res.json();
+        })
         .then((data) => {
-          // Map image paths to imported images
+          // Prepend /images/ to image paths
           const updatedProducts = data.map((product) => ({
             ...product,
-            image: images[product.image.split('.')[0]] || images.placeholder,
+            image: `/images/${product.image}`,
           }));
           setProducts(updatedProducts);
+          setError(null);
         })
-        .catch((err) => console.error('Error fetching products:', err));
+        .catch((err) => {
+          console.error('Error fetching products:', err);
+          setError(err.message);
+          setProducts([]);
+        });
     }, []);
 
     const filteredProducts = products.filter((product) =>
@@ -32,6 +42,11 @@ import { useState, useEffect } from 'react';
     return (
       <div className="p-4 sm:p-8 max-w-5xl mx-auto">
         <h1 className="text-2xl sm:text-3xl text-gray-800 mb-4">Products</h1>
+        {error && (
+          <div className="text-red-500 mb-4">
+            Error loading products: {error}
+          </div>
+        )}
         <div className="mb-6 flex flex-col sm:flex-row gap-4">
           <input
             type="text"
@@ -52,6 +67,9 @@ import { useState, useEffect } from 'react';
           </select>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {filteredProducts.length === 0 && !error && (
+            <p>No products found.</p>
+          )}
           {filteredProducts.map((product) => (
             <div key={product.id} className="border rounded-lg p-4 shadow hover:shadow-lg transition">
               <img
@@ -60,7 +78,7 @@ import { useState, useEffect } from 'react';
                 className="w-full h-48 object-cover rounded mb-4"
                 onError={(e) => {
                   console.error(`Failed to load image: ${e.target.src}`);
-                  e.target.src = images.placeholder;
+                  e.target.src = '/images/placeholder.jpg';
                   e.target.onerror = null; // Prevent infinite loop
                 }}
               />
