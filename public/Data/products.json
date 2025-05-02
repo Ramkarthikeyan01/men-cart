@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "name": "T-Shirt",
+    "price": 250,
+    "image": "tshirt.jpg",
+    "category": "Dress"
+  },
+  {
+    "id": 2,
+    "name": "Jeans",
+    "price": 3000,
+    "image": "jeans.jpg",
+    "category": "Dress"
+  },
+  {
+    "id": 3,
+    "name": "Sneakers",
+    "price": 2500,
+    "image": "sneakers.webp",
+    "category": "Shoes"
+  },
+  {
+    "id": 4,
+    "name": "Coat",
+    "price": 2500,
+    "image": "coat.jpg",
+    "category": "Dress"
+  },
+  {
+    "id": 5,
+    "name": "Cutshoe",
+    "price": 1000,
+    "image": "cutshoe.webp",
+    "category": "Shoes"
+  },
+  {
+    "id": 6,
+    "name": "Formalshirt",
+    "price": 1500,
+    "image": "formal.jpg",
+    "category": "Dress"
+  },
+  {
+    "id": 7,
+    "name": "Loafer",
+    "price": 1400,
+    "image": "loafers.jpg",
+    "category": "Shoes"
+  },
+  {
+    "id": 8,
+    "name": "Running shoe",
+    "price": 2300,
+    "image": "runningshoes.jpg",
+    "category": "Shoes"
+  },
+  {
+    "id": 9,
+    "name": "Sharvani",
+    "price": 2000,
+    "image": "sharvani.jpg",
+    "category": "Dress"
+  },
+  {
+    "id": 10,
+    "name": "SmartWatch",
+    "price": 1700,
+    "image": "smartwatch.jpg",
+    "category": "Watch"
+  },
+  {
+    "id": 11,
+    "name": "Watch",
+    "price": 2000,
+    "image": "watch.jpg",
+    "category": "Watch"
+  },
+  {
+    "id": 12,
+    "name": "CargoJeans",
+    "price": 1600,
+    "image": "cargojeans.jpg",
+    "category": "Jeans"
+  }
+]
