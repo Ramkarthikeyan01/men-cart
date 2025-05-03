@@ -1,70 +1,79 @@
 import { useState } from 'react';
-     import { useCart } from '../Context/CartContext';
-     import { useNavigate } from 'react-router-dom';
+import { useCart } from '../Context/CartContext';
+import { Link } from 'react-router-dom';
 
-     function Checkout() {
-       const { cartItems, clearCart } = useCart();
-       const navigate = useNavigate();
-       const [formData, setFormData] = useState({
-         name: '',
-         email: '',
-         address: '',
-       });
+function Checkout() {
+  const { cart, updateQuantity, removeFromCart, getCartTotal, clearCart } = useCart();
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
-       const handleSubmit = (e) => {
-         e.preventDefault();
-         if (formData.name && formData.email && formData.address) {
-           console.log('Order placed:', { formData, cartItems });
-           clearCart();
-           navigate('/');
-         } else {
-           alert('Please fill out all fields.');
-         }
-       };
+  const handleCheckout = () => {
+    setOrderPlaced(true);
+    clearCart();
+  };
 
-       return (
-         <div className="p-4 sm:p-8 max-w-5xl mx-auto">
-           <h1 className="text-2xl sm:text-3xl text-gray-800 mb-4">Checkout</h1>
-           <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-             <div className="mb-4">
-               <label className="block text-gray-700">Name</label>
-               <input
-                 type="text"
-                 value={formData.name}
-                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                 className="w-full border rounded px-3 py-2"
-                 required
-               />
-             </div>
-             <div className="mb-4">
-               <label className="block text-gray-700">Email</label>
-               <input
-                 type="email"
-                 value={formData.email}
-                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                 className="w-full border rounded px-3 py-2"
-                 required
-               />
-             </div>
-             <div className="mb-4">
-               <label className="block text-gray-700">Address</label>
-               <input
-                 type="text"
-                 value={formData.address}
-                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                 className="w-full border rounded px-3 py-2"
-                 required
-               />
-             </div>
-             <button
-               type="submit"
-               className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
-             >
-               Place Order
-             </button>
-           </form>
-         </div>
-       );
-     }
+  return (
+    <div className="p-4 sm:p-8 max-w-5xl mx-auto">
+      <h1 className="text-2xl sm:text-3xl text-gray-800 mb-4">Checkout</h1>
+      {orderPlaced ? (
+        <div className="text-center">
+          <h2 className="text-xl sm:text-2xl mb-4">Order Placed Successfully!</h2>
+          <Link to="/products" className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition">
+            Continue Shopping
+          </Link>
+        </div>
+      ) : cart.length === 0 ? (
+        <p>Your cart is empty. <Link to="/products" className="text-blue-500 hover:underline">Shop now</Link></p>
+      ) : (
+        <div>
+          <div className="grid grid-cols-1 gap-6 mb-6">
+            {cart.map((item) => (
+              <div key={item.id} className="flex items-center border rounded-lg p-4 shadow">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-24 h-24 object-cover rounded mr-4"
+                />
+                <div className="flex-1">
+                  <h2 className="text-lg font-semibold">{item.name}</h2>
+                  <p className="text-gray-600">₹{item.price.toFixed(2)}</p>
+                  <div className="flex items-center mt-2">
+                    <button
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      className="bg-gray-200 px-2 py-1 rounded"
+                    >
+                      -
+                    </button>
+                    <span className="mx-2">{item.quantity}</span>
+                    <button
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      className="bg-gray-200 px-2 py-1 rounded"
+                    >
+                      +
+                    </button>
+                    <button
+                      onClick={() => removeFromCart(item.id)}
+                      className="ml-4 text-red-500 hover:underline"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-right">
+            <p className="text-lg font-semibold">Total: ₹{getCartTotal().toFixed(2)}</p>
+            <button
+              onClick={handleCheckout}
+              className="mt-4 bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition"
+            >
+              Place Order
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
-     export default Checkout;
+export default Checkout;
